@@ -1,0 +1,478 @@
+---
+title: "DISTRIBUCIONES DE FRECUENCIAS"
+subtitle: "Tablas y gráficas"
+author: 
+  - name: Dagoberto Salgado Horta<br>Nancy Roa Robledo
+    affiliation: "Escuela Superior de Administración Pública"
+    affiliation-url: "https://www.esap.edu.co/"
+date: today
+lang: es
+title-block-banner: "#98b6ed"
+
+format:
+  html:
+    page-layout: full
+    fontsize: 16pt
+    toc: true
+    toc-location: right
+    number-sections: true
+    code-fold: true
+    code-summary: "Ver código"
+    theme: dark
+    highlight-style: monokai
+    html-math-method: katex
+    smooth-scroll: true
+    link-external-newwindow: true
+    code-overflow: scroll
+    favicon: favicon.ico
+    
+editor: visual
+
+knitr:
+  opts_chunk:
+    message: false
+    warning: false
+    fig.align: center
+    fig.width: 8
+    fig.height: 8
+    out.width: "80%"
+bibliography: references.bib
+---
+
+```{=html}
+<div style="position:absolute; top:10px; right:10px;">
+<img src="Logo_Esap.png" width="180">
+</div>
+```
+
+```{=html}
+<style>
+body{
+  background-color:#f7f6ed;
+  font-size:150%;
+  text-align:justify;
+}
+</style>
+```
+
+# .Cargar paquetes
+
+```{r}
+ipak <- function(pkg){
+
+  options(repos = c(CRAN="https://cloud.r-project.org"))
+
+  new.pkg <- pkg[!(pkg %in% rownames(installed.packages()))]
+
+  if(length(new.pkg)) install.packages(new.pkg, dependencies = TRUE)
+
+  invisible(lapply(pkg, function(p)
+    suppressPackageStartupMessages(library(p, character.only = TRUE))
+  ))
+}
+
+packages <- c("tidyverse","kableExtra","readxl")
+
+ipak(packages)
+```
+
+[@tidyverse; @kableExtra; @readxl]
+
+# Introducción
+
+**Distribución de frecuencias**
+
+**Concepto**
+
+Una **distribución de frecuencias** es una forma de organizar, resumir y presentar datos estadísticos mediante tablas que muestran el número de observaciones que pertenecen a cada categoría o intervalo de una variable.
+
+Formalmente, si se tiene un conjunto de datos:
+
+$$
+X = \{x_1,x_2,x_3,\ldots,x_n\}
+$$
+
+la distribución de frecuencias permite identificar cuántas veces aparece cada valor o intervalo dentro del conjunto de datos.
+
+Las distribuciones de frecuencias se utilizan para:
+
+- Resumir grandes volúmenes de datos.
+- Identificar patrones y tendencias en los datos.
+- Facilitar la construcción de gráficos estadísticos.
+- Calcular medidas estadísticas, como la media, la varianza y la desviación estándar.
+
+**Elementos de una distribución de frecuencias**
+
+Una tabla de distribución de frecuencias generalmente contiene los siguientes elementos:
+
+| Elemento | Descripción |
+|:-----------------------------------|:-----------------------------------|
+| Clase o categoría | Valores o intervalos de la variable. |
+| Frecuencia absoluta | Número de veces que aparece un valor o categoría. |
+| Frecuencia relativa | Proporción del total de observaciones. |
+| Frecuencia acumulada | Suma progresiva de las frecuencias absolutas. |
+| Frecuencia relativa acumulada | Suma progresiva de las frecuencias relativas. |
+| Marca de clase | Punto medio de cada intervalo. |
+
+**Frecuencia absoluta**
+
+La **frecuencia absoluta** indica cuántas veces aparece un valor o categoría en el conjunto de datos. Se representa mediante el símbolo $f_i$.
+
+Donde:
+
+- $i$: identifica la categoría o clase.
+- $f_i$: número de observaciones pertenecientes a la categoría o clase $i$.
+
+La suma de todas las frecuencias absolutas es igual al tamaño de la muestra:
+
+$$
+\boxed{\sum_{i=1}^{k} f_i=n}
+$$
+
+Donde:
+
+- $k$: número total de clases o categorías.
+- $n$: número total de observaciones.
+
+**Frecuencia relativa**
+
+La **frecuencia relativa** representa la proporción de observaciones que pertenecen a una categoría o clase con respecto al total de datos.
+
+Se calcula mediante:
+
+$$
+\boxed{h_i=\frac{f_i}{n}}
+$$
+
+Donde:
+
+- $h_i$: frecuencia relativa de la clase $i$.
+- $f_i$: frecuencia absoluta de la clase $i$.
+- $n$: número total de observaciones.
+
+La suma de todas las frecuencias relativas es igual a uno:
+
+$$
+\boxed{\sum_{i=1}^{k}h_i=1}
+$$
+
+Si la frecuencia relativa se expresa en porcentaje, se utiliza:
+
+$$
+\boxed{h_i(\%)=\frac{f_i}{n}\times 100}
+$$
+
+**Frecuencia acumulada**
+
+La **frecuencia acumulada** corresponde a la suma progresiva de las frecuencias absolutas hasta una clase determinada. Se representa mediante $F_i$.
+
+Su expresión matemática es:
+
+$$
+\boxed{F_i=\sum_{j=1}^{i}f_j}
+$$
+
+Donde:
+
+- $F_i$: frecuencia absoluta acumulada hasta la clase $i$.
+- $f_j$: frecuencia absoluta de cada clase anterior y de la clase actual.
+
+Una propiedad fundamental es que la última frecuencia acumulada es igual al total de observaciones:
+
+$$
+\boxed{F_k=n}
+$$
+
+La frecuencia acumulada permite responder preguntas como:
+
+- ¿Cuántas observaciones son menores o iguales que un determinado valor?
+- ¿Cuántos individuos tienen una edad inferior o igual a cierta cantidad?
+- ¿Cuántos estudiantes obtuvieron una calificación menor o igual a un valor establecido?
+
+**Frecuencia relativa acumulada**
+
+La **frecuencia relativa acumulada** se obtiene mediante la suma progresiva de las frecuencias relativas. Se representa mediante $H_i$.
+
+Su expresión matemática es:
+
+$$
+\boxed{H_i=\sum_{j=1}^{i}h_j}
+$$
+
+También puede calcularse dividiendo la frecuencia absoluta acumulada entre el total de observaciones:
+
+$$
+\boxed{H_i=\frac{F_i}{n}}
+$$
+
+Una propiedad fundamental es:
+
+$$
+\boxed{H_k=1}
+$$
+
+Cuando se expresa en porcentaje:
+
+$$
+\boxed{H_i(\%)=\frac{F_i}{n}\times 100}
+$$
+
+**Distribución de frecuencias para datos agrupados**
+
+Cuando se trabaja con conjuntos de datos grandes o con variables cuantitativas que presentan numerosos valores diferentes, es conveniente agrupar las observaciones en intervalos o clases.
+
+Un intervalo de clase puede representarse mediante:
+
+$$
+(L_i,L_s)
+$$
+
+Donde:
+
+- $L_i$: límite inferior del intervalo.
+- $L_s$: límite superior del intervalo.
+
+La construcción de una distribución de frecuencias para datos agrupados requiere determinar el número de clases, calcular el rango, establecer la amplitud y construir los respectivos intervalos.
+
+**Número de clases: regla de Sturges**
+
+Para determinar el número de clases se utiliza frecuentemente la regla de Sturges:
+
+$$
+\boxed{k=1+3.322\log_{10}(n)}
+$$
+
+Donde:
+
+- $k$: número de clases.
+- $n$: tamaño de la muestra.
+- $\log_{10}$: logaritmo en base 10.
+
+El resultado se aproxima a un número entero, teniendo en cuenta las características del conjunto de datos.
+
+**Rango de los datos**
+
+El rango representa la diferencia entre el valor máximo y el valor mínimo del conjunto de datos:
+
+$$
+\boxed{R=X_{\max}-X_{\min}}
+$$
+
+Donde:
+
+- $R$: rango de los datos.
+- $X_{\max}$: valor máximo observado.
+- $X_{\min}$: valor mínimo observado.
+
+**Amplitud de clase**
+
+La amplitud de clase corresponde al tamaño o extensión de cada intervalo. Se calcula mediante:
+
+$$
+\boxed{A=\frac{R}{k}}
+$$
+
+Donde:
+
+- $A$: amplitud de clase.
+- $R$: rango de los datos.
+- $k$: número de clases.
+
+Cuando se trabaja con datos discretos o se requiere una amplitud práctica, puede ser necesario ajustar el resultado para garantizar que todos los datos queden incluidos en los intervalos.
+
+**Marca de clase**
+
+La **marca de clase** es el punto medio de cada intervalo y se utiliza como valor representativo de las observaciones pertenecientes a dicha clase.
+
+Se calcula mediante:
+
+$$
+\boxed{x_i=\frac{L_i+L_s}{2}}
+$$
+
+Donde:
+
+- $x_i$: marca de clase.
+- $L_i$: límite inferior del intervalo.
+- $L_s$: límite superior del intervalo.
+
+**Representaciones gráficas de una distribución de frecuencias**
+
+A partir de una distribución de frecuencias se pueden construir diferentes representaciones gráficas que permiten visualizar e interpretar el comportamiento de los datos.
+
+Entre las más utilizadas se encuentran:
+
+1.  **Histograma:** representa gráficamente la distribución de frecuencias de una variable cuantitativa agrupada en intervalos.
+2.  **Polígono de frecuencias:** representa las frecuencias mediante puntos ubicados en las marcas de clase, unidos por segmentos de recta.
+3.  **Ojiva:** representa gráficamente las frecuencias acumuladas y permite analizar la proporción de observaciones menores o iguales a determinados valores.
+4.  **Gráfico de barras:** permite representar frecuencias de variables cualitativas o cuantitativas discretas.
+5.  **Gráfico circular:** representa la participación porcentual de cada categoría con respecto al total.
+
+Estas representaciones permiten identificar patrones, concentraciones, dispersiones y posibles comportamientos particulares de los datos, facilitando su interpretación y el análisis estadístico.
+
+::: callout-important
+**Nota estadística:** las frecuencias acumuladas se utilizan para variables cuantitativas o cualitativas ordinales. No son apropiadas para categorías nominales que carecen de un orden natural.
+:::
+
+# .Leer el Dataset
+
+```{r}
+deporte <- read_excel("Datos/deporte.xlsx")
+```
+
+# .Conocer el Dataset
+
+**Mostrar algunas filas del dataset**
+
+```{r}
+head(deporte)
+```
+
+**Numero de variables**
+
+```{r}
+deporte %>% names %>% length()
+```
+
+**Nombres de las variables**
+
+```{r}
+names(deporte)
+```
+
+**Estructura de las variables**
+
+```{r}
+glimpse(deporte)
+```
+
+**Transformar las variables**
+
+```{r}
+deporte$GENERO <- as.factor(deporte$GENERO)
+deporte$DEPORTE <- as.factor(deporte$DEPORTE)
+
+deporte$ESCOLARIDAD <- factor(deporte$ESCOLARIDAD, 
+                        levels = c("Primaria", "Secundaria", "Pregrado", "Posgrado"), ordered = TRUE)
+
+
+deporte$DESEMPEÑO <- factor(deporte$DESEMPEÑO, 
+                         levels = c("Bajo", "Medio", "Alto"), ordered = TRUE)
+```
+
+**Nueva estructura de las variables**
+
+```{r}
+glimpse(deporte)
+```
+
+# .Tablas y Graficas
+
+::: callout-important
+## La variable nominal tiene solo frecuencia absoluta, relativa y porcentaje
+:::
+
+**Análisis de frecuencias del género de los encuestados**
+
+::: panel-tabset
+## Tabla
+
+```{r}
+
+# Crear la tabla original
+tabla <- tibble(Genero = deporte$GENERO) %>% 
+  group_by(Genero) %>% 
+  summarise(fi = n()) %>%
+  mutate(
+    hi = round(fi/sum(fi), 4), 
+    Porcentaje = paste0(hi*100, "%"),)
+
+# Convertir las columnas a character para evitar conflictos
+tabla <- tabla %>% mutate(
+  Genero = as.character(Genero))
+
+# Añadir la fila de totales
+totales <- tibble(
+  Genero = "Total",
+  fi = sum(tabla$fi),
+  hi = round(sum(tabla$hi), 4),
+  Porcentaje = paste0(round(sum(tabla$hi) * 100, 2), "%"))
+
+# Combinar la tabla con los totales
+tabla_final <- bind_rows(tabla, totales)
+
+# Mostrar la tabla final con kable
+tabla_final %>% 
+  knitr::kable(
+    col.names = c("Genero", "$f_i$", "$h_i$", "Porcentaje"), 
+    align = c("l", "c", "c", "c"))
+
+```
+
+## Barras
+
+```{r}
+# Cargar las librerías necesarias
+library(ggplot2)
+library(dplyr)
+library(readxl)
+
+
+# Calcular los porcentajes de cada categoría en la variable GENERO
+genero_counts <- deporte %>%
+  dplyr::count(GENERO) %>%
+  mutate(porcentaje = n / sum(n) * 100)
+
+# Crear el diagrama de barras
+ggplot(genero_counts, aes(x = GENERO, y = porcentaje, fill = GENERO)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Distribución porcentual del genero de los encuestados", 
+       x = "Genero", 
+       y = "Porcentaje") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  geom_text(aes(label = sprintf("%.1f%%", porcentaje)), 
+            vjust = -0.5, 
+            color = "black", 
+            size = 3.5)
+```
+
+## Sectores
+
+```{r}
+# Cargar las librerías necesarias
+library(ggplot2)
+library(dplyr)
+library(readxl)
+
+
+
+# Calcular los porcentajes de cada categoría en la variable GENERO
+genero_counts <- deporte %>%
+  dplyr::count(GENERO) %>%
+  mutate(porcentaje = n / sum(n) * 100)
+
+# Crear el diagrama circular
+ggplot(genero_counts, aes(x = "", y = porcentaje, fill = GENERO)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  labs(title = "Distribución porcentual del genero de los encuestados") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.grid = element_blank(),
+        axis.text.x = element_blank()) +
+  geom_text(aes(label = sprintf("%.1f%%", porcentaje)), 
+            position = position_stack(vjust = 0.5), 
+            color = "white", 
+            size = 4)
+```
+
+## Interpretación
+
+En relación con la caracterización sociodemográfica de los participantes, se encontró que, de los 200 egresados de la Escuela Superior de Administración Pública (ESAP) incluidos en la encuesta, el 53,5 % (n = 107) corresponde al género masculino, mientras que el 46,5 % (n = 93) pertenece al género femenino. Estos resultados evidencian una mayor participación de hombres en la muestra, con una diferencia de 7 puntos porcentuales respecto a las mujeres.
+
+La distribución observada muestra una composición relativamente equilibrada entre ambos grupos, aunque con una ligera predominancia masculina. Este comportamiento permite identificar una participación importante de mujeres en la población encuestada, lo cual resulta relevante para la caracterización de los egresados y el análisis posterior de las variables relacionadas con su formación académica y trayectoria profesional.
+
+En síntesis, la muestra presenta una distribución por género sin diferencias porcentuales pronunciadas, lo que proporciona una descripción inicial de las características sociodemográficas de los egresados participantes.
+:::
